@@ -15,3 +15,7 @@ Waardevol:
 2. Zoeken naar plekken.
 3. Plaatsten op volgorde van zwaar naar licht.
 4. Blijft er over? Nieuw schip.
+
+
+Flowchart link:
+https://www.lucidchart.com/invitations/accept/9b8d6ca2-5fdf-41e5-8df7-d87b550f0187
