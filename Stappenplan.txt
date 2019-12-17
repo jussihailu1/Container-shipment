@@ -1,0 +1,17 @@
+
+Gekoeld:
+1. Sorteren op gewicht.
+2. Zwaarste als eerst plaatsen in de rij.
+3. De rest vullen tot er teveel gewicht op 1 container zit op volgorde van gewicht.
+4. Als er containers overblijven, nieuw schip.
+
+Normaal:
+1. Sorteren op gewicht.
+2. Plaatsen op links rechts torrie.
+3. Overblijfselen? New ship.
+
+Waardevol:
+1. Sorteren op gewicht.
+2. Zoeken naar plekken.
+3. Plaatsten op volgorde van zwaar naar licht.
+4. Blijft er over? Nieuw schip.
