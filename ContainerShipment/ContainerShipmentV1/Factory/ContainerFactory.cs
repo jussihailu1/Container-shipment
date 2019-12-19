@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ContainerShipmentV1.Container;
+using ContainerShipmentV1.Containers;
 
 namespace ContainerShipmentV1.Factory
 {
     public static class ContainerFactory
     {
-        public static List<IContainer> CreateContainersWithRndWeight(Dictionary<ContainerType, int> containersToCreate)
+        public static List<Container> CreateContainersWithRndWeight(Dictionary<ContainerType, int> containersToCreate)
         {
-            var containersToReturn = new List<IContainer>();
+            var containersToReturn = new List<Container>();
 
             foreach (KeyValuePair<ContainerType, int> containerToCreate in containersToCreate)
             {
@@ -22,9 +22,9 @@ namespace ContainerShipmentV1.Factory
             return containersToReturn;
         }
 
-        private static IContainer CreateContainer(ContainerType containerType)
+        private static Container CreateContainer(ContainerType containerType)
         {
-            var weight = new Random().Next(4, 30);
+            var weight = new Random().Next(4, 31);
 
             switch (containerType)
             {

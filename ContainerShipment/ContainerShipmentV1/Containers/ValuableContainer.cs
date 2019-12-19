@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ContainerShipmentV1.Container
+namespace ContainerShipmentV1.Containers
 {
-    public class CooledContainer : IContainer
+    public class ValuableContainer : Container
     {
         public int Weight { get; set; }
         public VectorPoint VectorPoint { get; set; }
 
-        public CooledContainer(int weight)
+        public ValuableContainer(int weight) : base(weight)
         {
             Weight = weight;
         }

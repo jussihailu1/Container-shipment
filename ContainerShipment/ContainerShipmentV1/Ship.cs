@@ -8,23 +8,23 @@ namespace ContainerShipmentV1
 {
     public class Ship
     {
-        //public int MaxWeight { get; set; }
         public int Width { get; set; }
         public int Length { get; set; }
-        public List<IContainer> Containers { get; set; }
+        public List<Container> Containers { get; set; }
 
         public Ship(int width, int length)
         {
             Width = width;
             Length = length;
+            Containers = new List<Container>();
         }
 
-        public VectorPoint SearchPossibleLocations(IContainer container)
-        {
+        //public VectorPoint SearchPossibleLocations(IContainer container)
+        //{
             
-        }
+        //}
 
-        public bool CheckWeight(IContainer containerToAdd, List<IContainer> containerStack)
+        public bool CheckWeight(Container containerToAdd, List<Container> containerStack)
         {
             containerStack.OrderByDescending(c => c.VectorPoint.Z);
 
