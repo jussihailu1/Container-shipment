@@ -15,7 +15,7 @@ namespace ContainerShipmentV1
 
             Dictionary<ContainerType, int> dictionary = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 25
+                [ContainerType.Cooled] = 150
             };
 
             var containersToDistribute = containerShipmentManager.CreateContainers(dictionary);
@@ -25,7 +25,8 @@ namespace ContainerShipmentV1
             {
                 var shipNr = containerShipmentManager.Ships.IndexOf(ship) + 1;
 
-                Console.WriteLine("Ship " + shipNr);
+                Console.WriteLine("SHIP " + shipNr);
+                Console.WriteLine("Ship width: " + ship.Width + " and length: " + ship.Length);
 
                 var heighestContainer = ship.Containers.OrderByDescending(container => container.VectorPoint.Z).ToList()[0].VectorPoint.Z;
 
@@ -35,29 +36,52 @@ namespace ContainerShipmentV1
 
                 for (int i = heighestContainer; i >= 0; i--)
                 {
-                    string s = "";
+                    string containersInRow = "";
                     foreach (var container in ship.Containers.Where(container => container.VectorPoint.Z == i))
                     {
-                        string cString = container.ToString();
-                        if (cString.Length < 20)
-                        {
-                            string space = " ";
-                            for (int j = 0; j < 20 - cString.Length; j++)
-                            {
-                                cString += space;
-                            }
+                        //string containerString = totalContainerWeight.ToString();
+                        string containerString = ship.Containers.Where(c => c.VectorPoint.X == container.VectorPoint.X && c.VectorPoint.Y == container.VectorPoint.Y && c.VectorPoint.Z > 0 && c.VectorPoint.Z < container.VectorPoint.Z + 1).Sum(c => c.Weight).ToString();
+                        //string containerString = container.ToString();
 
-                            s += cString + " ";
-                        }
-                        else
+                        int maxStringLength = 10;
+
+                        int charactersLeft = maxStringLength - containerString.Length;
+
+                        for (int j = 0; j < charactersLeft; j++)
                         {
-                            s += $"[{container.ToString()}  W = {container.Weight}]";
+                            containerString += " ";
                         }
+
+                        containersInRow += containerString;
                     }
-                    Console.WriteLine(s);
+                    Console.WriteLine(containersInRow);
                 }
 
+                string totalWeightForEachRow = "";
+                for (int i = 0; i < ship.Width; i++)
+                {
+                    string totalWeightString = ship.Containers.Where(c => c.VectorPoint.X == i && c.VectorPoint.Z > 0).Sum(c => c.Weight).ToString();
+
+                    int maxStringLength = 10;
+
+                    int charactersLeft = maxStringLength - totalWeightString.Length;
+
+                    for (int j = 0; j < charactersLeft; j++)
+                    {
+                        totalWeightString += " ";
+                    }
+
+                    totalWeightForEachRow += totalWeightString;
+
+                    //totalWeightForEachRow += ship.Containers.Where(c => c.VectorPoint.X == i && c.VectorPoint.Z > 0).Sum(c => c.Weight);
+                    //totalWeightForEachRow += "         ";
+                }
                 Console.WriteLine("-------------------------------------------------------------------------------------------");
+                Console.WriteLine(totalWeightForEachRow);
+                Console.WriteLine("-------------------------------------------------------------------------------------------");
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
+                Console.WriteLine(" ");
             }
 
             Console.Read();

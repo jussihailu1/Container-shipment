@@ -6,12 +6,14 @@ namespace ContainerShipmentV1
 {
     public abstract class Container
     {
-        public int Weight { get; set; }
+        public int Weight { get; }
         public VectorPoint VectorPoint { get; set; }
+        public int MaxWeightAbove { get; }
 
         protected Container(int weight)
         {
             Weight = weight;
+            MaxWeightAbove = 120;
         }
 
         public override string ToString()
