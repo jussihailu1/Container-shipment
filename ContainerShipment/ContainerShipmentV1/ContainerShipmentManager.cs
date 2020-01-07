@@ -11,43 +11,34 @@ namespace ContainerShipmentV1
     {
         public List<Ship> Ships { get; set; }
 
-        private readonly List<Container> _undistributedContainers;
+        private readonly List<Container> _notPlacedContainers;
 
-        public List<Container> UndistributedContainers => _undistributedContainers;
+        public IEnumerable<Container> NotPlacedContainers => _notPlacedContainers;
 
         public ContainerShipmentManager()
         {
             Ships = new List<Ship>();
-            _undistributedContainers = new List<Container>();
+            _notPlacedContainers = new List<Container>();
         }
 
         public List<Container> CreateContainers(Dictionary<ContainerType, int> containerOrder) => ContainerFactory.CreateContainersWithRndWeight(containerOrder);
 
         public void Distribute(List<Container> containers)
         {
-            containers.OrderBy(container => container.Weight);
+            containers = containers.OrderByDescending(container => container.Weight).ToList();
 
-            while (containers.Count > 0)
-            {
-                var cooledContainers = containers.Where(container => container is CooledContainer).ToList();
-                var normalContainers = containers.Where(container => container is NormalContainer).ToList();
-                var valuableContainers = containers.Where(container => container is ValuableContainer).ToList();
+            var cooledContainers = containers.Where(container => container is CooledContainer).ToList();
+            var normalContainers = containers.Where(container => container is NormalContainer).ToList();
+            var valuableContainers = containers.Where(container => container is ValuableContainer).ToList();
 
-                _undistributedContainers.Clear();
+            var ship = ShipFactory.CreateShip(5, 10);
+            Ships.Add(ship);
 
-                Ships.Add(ShipFactory.CreateShip(5, 10));
+            DistributeCooledContainers(cooledContainers, ship);
 
-                foreach (Ship ship in Ships)
-                {
-                    DistributeCooledContainers(cooledContainers, ship);
+            DistributeNormalContainers(normalContainers, ship);
 
-                    DistributeNormalContainers(normalContainers, ship);
-
-                    DistributeValuableContainers(valuableContainers, ship);
-                }
-
-                containers = _undistributedContainers;
-            }
+            DistributeValuableContainers(valuableContainers, ship);
         }
 
         private void DistributeCooledContainers(List<Container> containers, Ship ship)
@@ -57,61 +48,64 @@ namespace ContainerShipmentV1
             int posY = 0;
             int offset = 0;
             bool previousContainerIsDistributed = false;
-            int undistributedContainersCount = 0;
 
             foreach (var container in containers)
             {
-                int containerIndex = containers.IndexOf(container) - undistributedContainersCount;
-                bool indexIsRound = (containerIndex / (decimal)shipWidth) % 1 == 0;
+                int containerIndex = containers.IndexOf(container) - _notPlacedContainers.Count;
+                bool indexIsRound = (containerIndex / (decimal)shipWidth) % 1 == 0; //Kijken wat hier eigenlijk berekent wordt.
+                bool isContainerPlaced = false;
 
-                if (containerIndex != 0 && indexIsRound)
+                if (containerIndex != 0 && indexIsRound && previousContainerIsDistributed)
                 {
                     posZ++;
-
-                    if (previousContainerIsDistributed)
-                    {
-                        offset += shipWidth;
-                    }
+                    offset += shipWidth;
                 }
 
-                int posX = containerIndex - offset;
+                var posX = containerIndex - offset;
 
-                if (posZ == 0)
+                if (IsPlaceAvailable(ship, posX, posY, posZ))
                 {
-                    previousContainerIsDistributed = true;
-                    PlaceContainer(ship, container, posX, posY, posZ);
-                }
-                else
-                {
-                    var totalWeightOfStack = ship.Containers.Where(c => c.VectorPoint.X == posX && c.VectorPoint.Y == posY && c.VectorPoint.Z > 0).Sum(c => c.Weight);
-                    var bottomContainer = ship.Containers.First(c => c.VectorPoint.X == posX && c.VectorPoint.Y == posY && c.VectorPoint.Z == 0);
-                    if (IsBelowMaxWeight(totalWeightOfStack, container.Weight, bottomContainer.MaxWeightAbove))
+                    if (posZ == 0)
                     {
-                        previousContainerIsDistributed = true;
                         PlaceContainer(ship, container, posX, posY, posZ);
+                        previousContainerIsDistributed = true;
+                        isContainerPlaced = true;
                     }
                     else
                     {
-                        undistributedContainersCount++;
-                        previousContainerIsDistributed = false;
-                        _undistributedContainers.Add(container);
+                        var totalWeightOfStack = ship.Containers.Where(c => c.VectorPoint.X == posX && c.VectorPoint.Y == posY && c.VectorPoint.Z > 0).Sum(c => c.Weight);
+                        var bottomContainer = ship.Containers.First(c => c.VectorPoint.X == posX && c.VectorPoint.Y == posY && c.VectorPoint.Z == 0);
+                        if (IsBelowMaxWeight(totalWeightOfStack, container.Weight, bottomContainer.MaxWeightAbove))
+                        {
+                            PlaceContainer(ship, container, posX, posY, posZ);
+                            previousContainerIsDistributed = true;
+                            isContainerPlaced = true;
+                        }
                     }
                 }
+
+                if (isContainerPlaced) continue;
+                previousContainerIsDistributed = false;
+                _notPlacedContainers.Add(container);
             }
+
+            Console.WriteLine(" ");
         }
 
-        //public int SetPosition(int shipWidth, int pContainerX, int ppContainerX)
-        //{
-        //    int posX;
+        private bool IsPlaceAvailable(Ship ship, int x, int y, int z)
+        {
+            var placeToCheck = new VectorPoint(x, y, z);
 
-        //    if (pContainerX > shipWidth / 2)
-        //    {
-        //        if (ppContainerX > shipWidth / 2)
-        //        {
-        //            posX = 
-        //        }
-        //    }
-        //}
+            foreach (var container in ship.Containers)
+            {
+                if (container.VectorPoint == placeToCheck)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         private void DistributeNormalContainers(List<Container> containers, Ship ship)
         {
