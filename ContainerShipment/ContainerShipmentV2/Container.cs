@@ -22,22 +22,52 @@ namespace ContainerShipmentV2
             this.WeightAbove += weight;
         }
 
-        public string ToString(int a)
+        public string ToString(StringValue containerStringValue)
         {
-            if (a == 1)
-                switch (ContainerType)
-                {
-                    case ContainerType.Cooled:
-                        return $"[C] {this.Weight}";
-                    case ContainerType.Normal:
-                        return $"[N] {this.Weight}";
-                    case ContainerType.Valuable:
-                        return $"[V] {this.Weight}";
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            return a == 2 ? $"{this.Weight}" : $"{this.WeightAbove}";
+            switch (containerStringValue)
+            {
+                case StringValue.ContainerType:
+                    switch (ContainerType)
+                    {
+                        case ContainerType.Cooled:
+                            return "[C]";
+                        case ContainerType.Normal:
+                            return "[N]";
+                        case ContainerType.Valuable:
+                            return "[V]";
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                case StringValue.Weight:
+                    return Weight.ToString();
+                case StringValue.CurrentWeightAboveBottomContainer:
+                    return WeightAbove.ToString();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(containerStringValue), containerStringValue, null);
+            }
+
+            //if (a == 0)
+            //    switch (ContainerType)
+            //    {
+            //        case ContainerType.Cooled:
+            //            return $"[C] {Weight}";
+            //        case ContainerType.Normal:
+            //            return $"[N] {Weight}";
+            //        case ContainerType.Valuable:
+            //            return $"[V] {Weight}";
+            //        default:
+            //            throw new ArgumentOutOfRangeException();
+            //    }
+            //return a == 1 ? $"{this.Weight}" : $"{this.WeightAbove}";
         }
+
+    }
+
+    public enum StringValue
+    {
+        Weight,
+        ContainerType,
+        CurrentWeightAboveBottomContainer
     }
 
     public enum ContainerType
