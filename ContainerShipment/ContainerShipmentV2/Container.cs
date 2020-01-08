@@ -24,27 +24,18 @@ namespace ContainerShipmentV2
 
         public string ToString(StringValue containerStringValue)
         {
-            switch (containerStringValue)
+            return containerStringValue switch
             {
-                case StringValue.ContainerType:
-                    switch (ContainerType)
-                    {
-                        case ContainerType.Cooled:
-                            return "[C]";
-                        case ContainerType.Normal:
-                            return "[N]";
-                        case ContainerType.Valuable:
-                            return "[V]";
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                case StringValue.Weight:
-                    return Weight.ToString();
-                case StringValue.CurrentWeightAboveBottomContainer:
-                    return WeightAbove.ToString();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(containerStringValue), containerStringValue, null);
-            }
+                StringValue.ContainerType => ContainerType switch
+                {
+                    ContainerType.Cooled => "[C]",
+                    ContainerType.Normal => "[N]",
+                    ContainerType.Valuable => "[V]",
+                },
+                StringValue.Weight => Weight.ToString(),
+                StringValue.CurrentWeightAboveBottomContainer => WeightAbove.ToString(),
+                _ => throw new ArgumentOutOfRangeException(nameof(containerStringValue), containerStringValue, null),
+            };
 
             //if (a == 0)
             //    switch (ContainerType)
