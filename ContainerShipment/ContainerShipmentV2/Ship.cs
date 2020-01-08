@@ -62,20 +62,29 @@ namespace ContainerShipmentV2
 
         public void PlaceNormalContainer(Container container)
         {
+
             for (int z = 0; z < 30; z++)
             {
                 for (int y = 0; y < Length; y++)
                 {
                     if (WeightLeftSide > WeightRightSide)
                     {
-                        PlaceRightSide(container, y);
-                        WeightRightSide += container.Weight;
-                        return;
-                    }
+                        if (PlaceRightSide(container, y))
+                        {
+                            WeightRightSide += container.Weight;
+                            return;
+                        }
 
-                    PlaceLeftSide(container, y);
-                    WeightRightSide += container.Weight;
-                    return;
+                        //continue;
+                    }
+                    else
+                    {
+                        if (PlaceLeftSide(container, y))
+                        {
+                            WeightLeftSide += container.Weight;
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -85,32 +94,34 @@ namespace ContainerShipmentV2
 
         }
 
-        private void PlaceRightSide(Container container, int y)
+        private bool PlaceRightSide(Container container, int y)
         {
             for (int x = Middle - 1; x < Width; x++)
             {
                 var stack = Stacks.Find(s => s.X == x && s.Y == y);
-                if (stack.ContainerCanBeAdded(this, container)) continue;
+                if (!stack.ContainerCanBeAdded(this, container)) continue;
                 stack.AddContainer(container);
                 PlacedContainers.Add(container);
-                return;
+                return true;
             }
 
             NotPlacedContainers.Add(container);
+            return false;
         }
 
-        private void PlaceLeftSide(Container container, int y)
+        private bool PlaceLeftSide(Container container, int y)
         {
-            for (int x = 0; x < Middle; x++)
+            for (int x = Middle - 1; x >= 0; x--)
             {
                 var stack = Stacks.Find(s => s.X == x && s.Y == y);
                 if (!stack.ContainerCanBeAdded(this, container)) continue;
                 PlacedContainers.Add(container);
                 stack.AddContainer(container);
-                return;
+                return true;
             }
 
             NotPlacedContainers.Add(container);
+            return false;
         }
     }
 }

@@ -24,14 +24,12 @@ namespace ContainerShipmentV2
 
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
-            if (!WeightExceeded(container.Weight))
-            {
-                if (container.ContainerType == ContainerType.Cooled && Y == 0) return true;
-                var z = HeighestContainer;
-                if (container.ContainerType == ContainerType.Valuable && ValuableIsAllowed(ship, z)) return true;
-            }
+            if (WeightExceeded(container.Weight)) return false;
+            if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
+            var z = HeighestContainer;
+            if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship, z)) return false;
 
-            return false;
+            return true;
         }
 
         //public bool ContainerCanBeAdded(Ship ship, Container container)

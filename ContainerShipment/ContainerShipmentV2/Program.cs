@@ -12,22 +12,28 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 40,
-                [ContainerType.Normal] = 50
+                //[ContainerType.Cooled] = 40,
+                [ContainerType.Normal] = 2000
             };
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(5, 10);
+            var sm = new ShipManager(5, 6);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
             var ship = sm.Ship;
+
+            Console.WriteLine($"Total containers = {containersToCreate.Values.Sum(i => i)}");
+            Console.WriteLine($"Placed containers = {ship.PlacedContainers.Count}");
+            Console.WriteLine($"Not placed containers = {ship.NotPlacedContainers.Count}");
+            Console.WriteLine($"Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide}");
+
             var shipString = new StringBuilder();
 
-            int shipHeightContainer = ship.Stacks.Max(s => s.HeighestContainer);
+            int shipHeightContainer = ship.Stacks.Max(s => s.HeighestContainer) + 1;
 
-            for (int z = 0; z < shipHeightContainer; z++)
+            for (int z = shipHeightContainer - 1; z >= 0; z--)
             {
                 for (int x = 0; x < ship.Width; x++)
                 {
@@ -41,8 +47,8 @@ namespace ContainerShipmentV2
 
                         shipString.Append(container == null
                             ? "[ ]"
-                            : container.ToString(StringValue.ContainerType));
-                        //TODO: We kunnen heel die tostring djaaien en gewoon zeggen container.weight.tostring of container.containertype.tostring lol.
+                            : $"[{container.WeightAbove}]");
+                        //: $"[{container.ContainerType.ToString().Substring(0, 1)}]");
                     }
 
                     shipString.AppendLine();
