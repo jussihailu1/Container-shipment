@@ -12,8 +12,9 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                //[ContainerType.Cooled] = 40,
-                [ContainerType.Normal] = 2000
+                [ContainerType.Cooled] = 20,
+                [ContainerType.Normal] = 20,
+                [ContainerType.Valuable] = 20
             };
 
             Console.WriteLine("Hello World!");
@@ -26,12 +27,14 @@ namespace ContainerShipmentV2
 
             Console.WriteLine($"Total containers = {containersToCreate.Values.Sum(i => i)}");
             Console.WriteLine($"Placed containers = {ship.PlacedContainers.Count}");
-            Console.WriteLine($"Not placed containers = {ship.NotPlacedContainers.Count}");
+            Console.WriteLine($"Not placed containers = {sm.NotPlacedContainers.Count}");
+            Console.WriteLine($"Not placed V containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Valuable)}");
             Console.WriteLine($"Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide}");
+            Console.WriteLine(" ");
 
             var shipString = new StringBuilder();
 
-            int shipHeightContainer = ship.Stacks.Max(s => s.HeighestContainer) + 1;
+            int shipHeightContainer = ship.Stacks.Max(s => s.HeighestContainerZ) + 1;
 
             for (int z = shipHeightContainer - 1; z >= 0; z--)
             {
@@ -40,15 +43,14 @@ namespace ContainerShipmentV2
                     for (int y = 0; y < ship.Length; y++)
                     {
                         Container container = null;
-                        if (ship.Stacks.FirstOrDefault(s => s.X == x && s.Y == y).Containers.Count > z )
+                        if (ship.Stacks.FirstOrDefault(s => s.X == x && s.Y == y).Containers.Count > z)
                         {
                             container = ship.Stacks.FirstOrDefault(s => s.X == x && s.Y == y)?.Containers[z];
                         }
 
-                        shipString.Append(container == null
-                            ? "[ ]"
-                            : $"[{container.WeightAbove}]");
-                        //: $"[{container.ContainerType.ToString().Substring(0, 1)}]");
+                        shipString.Append(container == null ? "[ ]"
+                        //: $"[{container.WeightAbove}]"); 
+                        : $"[{container.ContainerType.ToString().Substring(0, 1)}]");
                     }
 
                     shipString.AppendLine();

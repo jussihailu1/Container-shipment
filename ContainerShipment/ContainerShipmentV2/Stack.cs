@@ -11,7 +11,7 @@ namespace ContainerShipmentV2
         public int X { get; set; }
         public int Y { get; set; }
         public List<Container> Containers { get; set; }
-        public int HeighestContainer => Containers.Count - 1;
+        public int HeighestContainerZ => Containers.Count - 1;
 
         public Stack(int x, int y)
         {
@@ -25,29 +25,22 @@ namespace ContainerShipmentV2
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
             if (WeightExceeded(container.Weight)) return false;
+            if (HeighestContainerZ > 0)
+            {
+                if (Containers[HeighestContainerZ].ContainerType == ContainerType.Valuable) return false;
+            }
+            //TODO: Bovenstaande dubbele if zou in een methode kunnen.
             if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
-            var z = HeighestContainer;
+            var z = HeighestContainerZ;
             if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship, z)) return false;
 
             return true;
         }
 
-        //public bool ContainerCanBeAdded(Ship ship, Container container)
-        //{
-        //    if (WeightExceeded(container.Weight)) return false;
-
-        //    if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
-
-        //    var z = HeighestContainer;
-        //    if (container.ContainerType == ContainerType.Valuable && ValuableIsAllowed(ship, z)) return true;
-
-        //    return false;
-        //}
-
         private bool ValuableIsAllowed(Ship ship, int z)
         {
-            if (ship.Stacks.Count(stack => stack.X == X && stack.Y == Y - 1) - 1 == z) return false;
-            if (ship.Stacks.Count(stack => stack.X == X && stack.Y == Y + 1) - 1 == z) return false;
+            if (ship.Stacks.Any(s => s.X == X && s.Y == - 1 && s.Containers.Count - 1 >= z)) return false;
+            if (ship.Stacks.Any(s => s.X == X && s.Y == + 1 && s.Containers.Count - 1 >= z)) return false;
             return true;
         }
 

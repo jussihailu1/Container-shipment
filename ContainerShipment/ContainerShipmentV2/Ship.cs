@@ -14,7 +14,6 @@ namespace ContainerShipmentV2
         public int WeightRightSide { get; set; }
         public List<Stack> Stacks { get; set; }
         public List<Container> PlacedContainers { get; set; }
-        public List<Container> NotPlacedContainers { get; set; }
 
         public Ship(int width, int length)
         {
@@ -25,7 +24,6 @@ namespace ContainerShipmentV2
             WeightRightSide = 0;
             Stacks = new List<Stack>();
             PlacedContainers = new List<Container>();
-            NotPlacedContainers = new List<Container>();
 
             for (int x = 0; x < Width; x++)
             {
@@ -38,7 +36,7 @@ namespace ContainerShipmentV2
 
         private int CalcMiddle() => decimal.ToInt32(decimal.Divide(Width, 2)) + 1;
 
-        public void PlaceCooledContainer(Container container)
+        public bool PlaceCooledContainer(Container container)
         {
             const int y = 0;
 
@@ -49,20 +47,27 @@ namespace ContainerShipmentV2
             {
                 if (WeightLeftSide > WeightRightSide)
                 {
-                    PlaceRightSide(container, y);
-                    WeightRightSide += container.Weight;
-                    return;
+                    if (PlaceRightSide(container, y))
+                    {
+                        WeightRightSide += container.Weight;
+                        return true;
+                    }
                 }
-
-                PlaceLeftSide(container, y);
-                WeightLeftSide += container.Weight;
-                return;
+                else
+                {
+                    if (PlaceLeftSide(container, y))
+                    {
+                        WeightLeftSide += container.Weight;
+                        return true;
+                    }
+                }
             }
+
+            return false;
         }
 
-        public void PlaceNormalContainer(Container container)
+        public bool PlaceNormalContainer(Container container)
         {
-
             for (int z = 0; z < 30; z++)
             {
                 for (int y = 0; y < Length; y++)
@@ -72,26 +77,49 @@ namespace ContainerShipmentV2
                         if (PlaceRightSide(container, y))
                         {
                             WeightRightSide += container.Weight;
-                            return;
+                            return true;
                         }
-
-                        //continue;
                     }
                     else
                     {
                         if (PlaceLeftSide(container, y))
                         {
                             WeightLeftSide += container.Weight;
-                            return;
+                            return true;
                         }
                     }
                 }
             }
+
+            return false;
         }
 
-        public void PlaceValuableContainer(Container container)
+        public bool PlaceValuableContainer(Container container)
         {
+            for (int z = 0; z < 30; z++)
+            {
+                for (int y = 0; y < Length; y++)
+                {
+                    if (WeightLeftSide > WeightRightSide)
+                    {
+                        if (PlaceRightSide(container, y))
+                        {
+                            WeightRightSide += container.Weight;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (PlaceLeftSide(container, y))
+                        {
+                            WeightLeftSide += container.Weight;
+                            return true;
+                        }
+                    }
+                }
+            }
 
+            return false;
         }
 
         private bool PlaceRightSide(Container container, int y)
@@ -105,7 +133,6 @@ namespace ContainerShipmentV2
                 return true;
             }
 
-            NotPlacedContainers.Add(container);
             return false;
         }
 
@@ -120,7 +147,6 @@ namespace ContainerShipmentV2
                 return true;
             }
 
-            NotPlacedContainers.Add(container);
             return false;
         }
     }

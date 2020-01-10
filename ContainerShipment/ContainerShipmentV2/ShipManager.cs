@@ -9,11 +9,13 @@ namespace ContainerShipmentV2
     {
         public Ship Ship { get; set; }
         public List<Container> ContainersToPlace { get; set; }
+        public List<Container> NotPlacedContainers { get; set; }
 
         public ShipManager(int width, int length)
         {
             Ship = new Ship(width, length);
             ContainersToPlace = new List<Container>();
+            NotPlacedContainers = new List<Container>();
         }
 
         public void CreateContainers(Dictionary<ContainerType, int> containersToCreate)
@@ -50,17 +52,26 @@ namespace ContainerShipmentV2
 
             foreach (var cooledContainer in cooledContainers)
             {
-                Ship.PlaceCooledContainer(cooledContainer);
+                if (!Ship.PlaceCooledContainer(cooledContainer))
+                {
+                    NotPlacedContainers.Add(cooledContainer);
+                }
             }
 
             foreach (var normalContainer in normalContainers)
             {
-                Ship.PlaceNormalContainer(normalContainer);
+                if (!Ship.PlaceNormalContainer(normalContainer))
+                {
+                    NotPlacedContainers.Add(normalContainer);
+                }
             }
 
             foreach (var valuableContainer in valuableContainers)
             {
-                Ship.PlaceValuableContainer(valuableContainer);
+                if (!Ship.PlaceValuableContainer(valuableContainer))
+                {
+                    NotPlacedContainers.Add(valuableContainer);
+                }
             }
         }
     }
