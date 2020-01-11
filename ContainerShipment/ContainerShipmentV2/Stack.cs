@@ -25,12 +25,7 @@ namespace ContainerShipmentV2
 
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
-            var z = HeighestContainerZ;
-
-            if (WeightExceeded(container.Weight)) return false;
-            if (IsTopContainerValuable()) return false;
-            if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
-
+            if (WeightExceeded(container.Weight) || IsTopContainerValuable()) return false;
             if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship)) return false;
 
             return true;
@@ -38,7 +33,6 @@ namespace ContainerShipmentV2
 
         private bool ValuableIsAllowed(Ship ship)
         {
-
             var stackInFront = ship.Stacks.Find(s => s.X == X && s.Y == Y - 1);
             if (stackInFront != null)
             {

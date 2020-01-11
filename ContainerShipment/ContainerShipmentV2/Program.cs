@@ -12,9 +12,9 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-
-                [ContainerType.Normal] = 20,
-                [ContainerType.Valuable] = 500
+                [ContainerType.Cooled] = 40,
+                [ContainerType.Normal] = 50,
+                [ContainerType.Valuable] = 30
 
             };
 
@@ -50,9 +50,9 @@ namespace ContainerShipmentV2
                         }
 
                         shipString.Append(container == null ? "[ ]"
-                        //: $"[{container.WeightAbove}]"); 
+                        //: $"[{container.WeightAbove}]");
                         : $"[{container.ContainerType.ToString().Substring(0, 1)}]");
-                    }
+        }
 
                     shipString.AppendLine();
                 }

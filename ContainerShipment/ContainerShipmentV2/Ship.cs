@@ -13,7 +13,7 @@ namespace ContainerShipmentV2
         public int WeightLeftSide { get; set; }
         public int WeightRightSide { get; set; }
         public List<Stack> Stacks { get; set; }
-        public List<Container> PlacedContainers { get; set; }
+        public List<Container> PlacedContainers => Stacks.SelectMany(s => s.Containers).ToList();
 
         public Ship(int width, int length)
         {
@@ -23,7 +23,6 @@ namespace ContainerShipmentV2
             WeightLeftSide = 0;
             WeightRightSide = 0;
             Stacks = new List<Stack>();
-            PlacedContainers = new List<Container>();
 
             for (int x = 0; x < Width; x++)
             {
@@ -36,12 +35,48 @@ namespace ContainerShipmentV2
 
         private int CalcMiddle() => decimal.ToInt32(decimal.Divide(Width, 2)) + 1;
 
+        public bool Place(Container container)
+        {
+            if (WeightLeftSide < WeightRightSide)
+            {
+                for (int y = 0; y < Length; y++)
+                {
+                    for (int x = Middle - 1; x >= 0; x--)
+                    {
+                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
+                        if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
+                        if (!stack.ContainerCanBeAdded(this, container)) continue;
+                        WeightLeftSide += container.Weight;
+                        stack.AddContainer(container);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                for (int y = 0; y < Length; y++)
+                {
+                    for (int x = Middle - 1; x < Width; x++)
+                    {
+                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
+                        if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
+                        if (!stack.ContainerCanBeAdded(this, container)) continue;
+                        WeightRightSide += container.Weight;
+                        stack.AddContainer(container);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public bool PlaceCooledContainer(Container container)
         {
-            const int y = 0;
-
             //y = 0 want gekoelde containers moeten voor aan de boot.
             //30 want minimale container gewicht = 4 ton en Maximale gewicht boven op een container is 120 ton dus 120 / 4 = 30.
+
+            const int y = 0;
 
             for (int z = 0; z < 30; z++)
             {
@@ -120,17 +155,6 @@ namespace ContainerShipmentV2
             }
             return false;
         }
-
-        //public bool PlaceValuableContainerV2(Container container)
-        //{
-        //    List<Stack> possibleLocationsForContainer = new List<Stack>();
-
-        //    foreach (var stack in Stacks.Where(c => c.Containers.Count == Stacks.Max(x => x.Containers.Count)))
-        //    {
-        //        possibleLocationsForContainer.Add(stack);
-        //    }
-
-        //}
 
         private bool PlaceRightSide(Container container, int y)
         {
