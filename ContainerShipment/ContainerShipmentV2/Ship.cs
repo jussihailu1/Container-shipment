@@ -83,7 +83,7 @@ namespace ContainerShipmentV2
 
         public bool Place(Container container, int x, int y)
         {
-            var stack = Stacks.Find(s => s.X == x && s.Y == y);
+            var stack = Stacks.ToList().Find(s => s.X == x && s.Y == y);
             if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) return false;
             if (!stack.ContainerCanBeAdded(this, container)) return false;
             stack.AddContainer(container);
