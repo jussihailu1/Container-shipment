@@ -12,15 +12,14 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 40,
+                //[ContainerType.Cooled] = 40,
                 [ContainerType.Normal] = 50,
-                [ContainerType.Valuable] = 30
-
+                //[ContainerType.Valuable] = 30
             };
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(5, 6);
+            var sm = new ShipManager(4, 6);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -30,7 +29,7 @@ namespace ContainerShipmentV2
             Console.WriteLine($"Placed containers = {ship.PlacedContainers.Count}");
             Console.WriteLine($"Not placed containers = {sm.NotPlacedContainers.Count}");
             Console.WriteLine($"Not placed V containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Valuable)}");
-            Console.WriteLine($"Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide}");
+            Console.WriteLine($"Weight: Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide}");
             Console.WriteLine(" ");
 
             var shipString = new StringBuilder();
@@ -52,7 +51,7 @@ namespace ContainerShipmentV2
                         shipString.Append(container == null ? "[ ]"
                         //: $"[{container.WeightAbove}]");
                         : $"[{container.ContainerType.ToString().Substring(0, 1)}]");
-        }
+                    }
 
                     shipString.AppendLine();
                 }

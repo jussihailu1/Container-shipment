@@ -9,7 +9,7 @@ namespace ContainerShipmentV2
     {
         public int Width { get; set; }
         public int Length { get; set; }
-        public int Middle { get; set; }
+        public int Middle { get; set; }///
         public int WeightLeftSide { get; set; }
         public int WeightRightSide { get; set; }
         public List<Stack> Stacks { get; set; }
@@ -35,40 +35,40 @@ namespace ContainerShipmentV2
 
         private int CalcMiddle() => decimal.ToInt32(decimal.Divide(Width, 2)) + 1;
 
-        public bool Place(Container container)
+        public bool PlaceNormalAndValuableContainer(Container container)
         {
-            if (WeightLeftSide < WeightRightSide)
+            for (int y = 0; y < Length; y++)
             {
-                for (int y = 0; y < Length; y++)
+                if (WeightLeftSide < WeightRightSide)
                 {
                     for (int x = Middle - 1; x >= 0; x--)
                     {
-                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
-                        if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
-                        if (!stack.ContainerCanBeAdded(this, container)) continue;
+                        if (!Place(container, x, y)) continue;
                         WeightLeftSide += container.Weight;
-                        stack.AddContainer(container);
                         return true;
                     }
                 }
-            }
-            else
-            {
-                for (int y = 0; y < Length; y++)
+                else
                 {
                     for (int x = Middle - 1; x < Width; x++)
                     {
-                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
-                        if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
-                        if (!stack.ContainerCanBeAdded(this, container)) continue;
+                        if (!Place(container, x, y)) continue;
                         WeightRightSide += container.Weight;
-                        stack.AddContainer(container);
                         return true;
                     }
                 }
             }
 
             return false;
+        }
+
+        public bool Place(Container container, int x, int y)
+        {
+            var stack = Stacks.Find(s => s.X == x && s.Y == y);
+            if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) return false;
+            if (!stack.ContainerCanBeAdded(this, container)) return false;
+            stack.AddContainer(container);
+            return true;
         }
 
         public bool PlaceCooledContainer(Container container)
