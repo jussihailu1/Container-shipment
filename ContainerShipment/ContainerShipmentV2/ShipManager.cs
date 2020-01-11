@@ -18,6 +18,7 @@ namespace ContainerShipmentV2
             NotPlacedContainers = new List<Container>();
         }
 
+        //Is het nodig om hiervoor een aparte factory te maken?
         public void CreateContainers(Dictionary<ContainerType, int> containersToCreate)
         {
             foreach (KeyValuePair<ContainerType, int> containerToCreate in containersToCreate)
@@ -60,8 +61,7 @@ namespace ContainerShipmentV2
 
             foreach (var normalContainer in normalContainers)
             {
-                //if (!Ship.PlaceNormalContainer(normalContainer))
-                if (!Ship.Place(normalContainer))
+                if (!Ship.PlaceNormalAndValuableContainer(normalContainer))
                 {
                     NotPlacedContainers.Add(normalContainer);
                 }
@@ -69,7 +69,7 @@ namespace ContainerShipmentV2
 
             foreach (var valuableContainer in valuableContainers)
             {
-                if (!Ship.PlaceValuableContainer(valuableContainer))
+                if (!Ship.PlaceNormalAndValuableContainer(valuableContainer))
                 {
                     NotPlacedContainers.Add(valuableContainer);
                 }
