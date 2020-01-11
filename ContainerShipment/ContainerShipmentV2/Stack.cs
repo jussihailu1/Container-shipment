@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace ContainerShipmentV2
@@ -24,14 +25,11 @@ namespace ContainerShipmentV2
 
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
-            if (WeightExceeded(container.Weight)) return false;
-            if (HeighestContainerZ > 0)
-            {
-                if (Containers[HeighestContainerZ].ContainerType == ContainerType.Valuable) return false;
-            }
-            //TODO: Bovenstaande dubbele if zou in een methode kunnen.
-            if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
             var z = HeighestContainerZ;
+
+            if (WeightExceeded(container.Weight)) return false;
+            if (IsTopContainerValuable()) return false;
+            if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
             if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship, z)) return false;
 
             return true;
@@ -39,9 +37,16 @@ namespace ContainerShipmentV2
 
         private bool ValuableIsAllowed(Ship ship, int z)
         {
-            if (ship.Stacks.Any(s => s.X == X && s.Y == - 1 && s.Containers.Count - 1 >= z)) return false;
-            if (ship.Stacks.Any(s => s.X == X && s.Y == + 1 && s.Containers.Count - 1 >= z)) return false;
+            if (z < 0) return true;
+
+            if (ship.Stacks.Any(s => s.X == X && s.Y == -1 && s.HeighestContainerZ + 1 >= z)) return false;
+            if (ship.Stacks.Any(s => s.X == X && s.Y == +1 && s.HeighestContainerZ - 1 >= z)) return false;
             return true;
+        }
+
+        private bool IsTopContainerValuable()
+        {
+            return Containers.Count > 0 && Containers.Last().ContainerType == ContainerType.Valuable;
         }
 
         public void AddContainer(Container container)

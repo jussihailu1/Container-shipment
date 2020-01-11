@@ -118,9 +118,19 @@ namespace ContainerShipmentV2
                     }
                 }
             }
-
             return false;
         }
+
+        //public bool PlaceValuableContainerV2(Container container)
+        //{
+        //    List<Stack> possibleLocationsForContainer = new List<Stack>();
+
+        //    foreach (var stack in Stacks.Where(c => c.Containers.Count == Stacks.Max(x => x.Containers.Count)))
+        //    {
+        //        possibleLocationsForContainer.Add(stack);
+        //    }
+
+        //}
 
         private bool PlaceRightSide(Container container, int y)
         {
