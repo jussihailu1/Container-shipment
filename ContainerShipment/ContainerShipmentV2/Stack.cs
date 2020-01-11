@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace ContainerShipmentV2
@@ -31,16 +32,24 @@ namespace ContainerShipmentV2
             }
             //TODO: Bovenstaande dubbele if zou in een methode kunnen.
             if (container.ContainerType == ContainerType.Cooled && Y != 0) return false;
-            var z = HeighestContainerZ;
-            if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship, z)) return false;
+            if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship)) return false;
 
             return true;
         }
 
-        private bool ValuableIsAllowed(Ship ship, int z)
+        private bool ValuableIsAllowed(Ship ship)
         {
-            if (ship.Stacks.Any(s => s.X == X && s.Y == - 1 && s.Containers.Count - 1 >= z)) return false;
-            if (ship.Stacks.Any(s => s.X == X && s.Y == + 1 && s.Containers.Count - 1 >= z)) return false;
+            var stackInFront = ship.Stacks.Find(s => s.X == X && s.Y == Y - 1);
+            if (stackInFront != null)
+            {
+                if (stackInFront.HeighestContainerZ > HeighestContainerZ) return false;
+            }
+
+            var stackBehind = ship.Stacks.Find(s => s.X == X && s.Y == Y + 1);
+            if (stackBehind != null)
+            {
+                if (stackBehind.HeighestContainerZ > HeighestContainerZ) return false;
+            }
             return true;
         }
 
