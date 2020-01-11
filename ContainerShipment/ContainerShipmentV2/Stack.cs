@@ -39,13 +39,13 @@ namespace ContainerShipmentV2
         private bool ValuableIsAllowed(Ship ship)
         {
 
-            var stackInFront = ship.Stacks.Find(s => s.X == X && s.Y == Y - 1);
+            var stackInFront = ship.Stacks.ToList().Find(s => s.X == X && s.Y == Y - 1);
             if (stackInFront != null)
             {
                 if (stackInFront.HeighestContainerZ > HeighestContainerZ) return false;
             }
 
-            var stackBehind = ship.Stacks.Find(s => s.X == X && s.Y == Y + 1);
+            var stackBehind = ship.Stacks.ToList().Find(s => s.X == X && s.Y == Y + 1);
             if (stackBehind != null)
             {
                 if (stackBehind.HeighestContainerZ > HeighestContainerZ) return false;
