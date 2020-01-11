@@ -28,7 +28,9 @@ namespace ContainerShipmentV2
             Console.WriteLine($"Total containers = {containersToCreate.Values.Sum(i => i)}");
             Console.WriteLine($"Placed containers = {ship.PlacedContainers.Count}");
             Console.WriteLine($"Not placed containers = {sm.NotPlacedContainers.Count}");
-            Console.WriteLine($"Not placed V containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Valuable)}");
+            Console.WriteLine($"Not placed Cooled containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Cooled)}");
+            Console.WriteLine($"Not placed Normal containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Normal)}");
+            Console.WriteLine($"Not placed Valuable containers = {sm.NotPlacedContainers.Count(c => c.ContainerType == ContainerType.Valuable)}");
             Console.WriteLine($"Weight: Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide}");
             Console.WriteLine(" ");
 
