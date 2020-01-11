@@ -60,7 +60,8 @@ namespace ContainerShipmentV2
 
             foreach (var normalContainer in normalContainers)
             {
-                if (!Ship.PlaceNormalContainer(normalContainer))
+                //if (!Ship.PlaceNormalContainer(normalContainer))
+                if (!Ship.Place(normalContainer))
                 {
                     NotPlacedContainers.Add(normalContainer);
                 }

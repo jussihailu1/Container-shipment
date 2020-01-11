@@ -52,9 +52,9 @@ namespace ContainerShipmentV2
                         }
 
                         shipString.Append(container == null ? "[ ]"
-                        //: $"[{container.WeightAbove}]"); 
+                        //: $"[{container.WeightAbove}]");
                         : $"[{container.ContainerType.ToString().Substring(0, 1)}]");
-                    }
+        }
 
                     shipString.AppendLine();
                 }
