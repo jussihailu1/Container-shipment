@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace ContainerShipmentV2
 {
     public class Ship
     {
+        private int MaxWeight => (Width * Length) * 150000;
+        private int Middle => CalcMiddle();
+        private readonly List<Stack> _stacks;
+        private decimal Median => decimal.Divide(Width, 2);
 
         public int Width { get; private set; }
         public int Length { get; private set; }
-        private int Middle { get; }
         public int WeightLeftSide { get; private set; }
         public int WeightRightSide { get; private set; }
-        private readonly List<Stack> _stacks;
         public IEnumerable<Stack> Stacks => _stacks.AsReadOnly();
         public IEnumerable<Container> PlacedContainers => Stacks.SelectMany(s => s.Containers);
 
@@ -22,7 +25,6 @@ namespace ContainerShipmentV2
         {
             Width = width;
             Length = length;
-            Middle = CalcMiddle();
             WeightLeftSide = 0;
             WeightRightSide = 0;
             _stacks = new List<Stack>();
@@ -38,6 +40,18 @@ namespace ContainerShipmentV2
 
         private int CalcMiddle() => decimal.ToInt32(decimal.Divide(Width, 2)) + 1;
 
+        public void WeightSetter(int x, Container container, bool uneven)
+        {
+            if (x < Median - Convert.ToInt16(uneven))
+            {
+                WeightLeftSide += container.Weight;
+            }
+            if (x > Median - Convert.ToInt16(uneven))
+            {
+                WeightRightSide += container.Weight;
+            }
+        }
+
         public bool Place(Container container)
         {
             if (WeightLeftSide < WeightRightSide)
@@ -46,7 +60,7 @@ namespace ContainerShipmentV2
                 {
                     for (int x = Middle - 1; x >= 0; x--)
                     {
-                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
+                        var stack = Stacks.ToList().Find(s => s.X == x && s.Y == y);
                         if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
                         if (!stack.ContainerCanBeAdded(this, container)) continue;
                         WeightLeftSide += container.Weight;
@@ -61,7 +75,7 @@ namespace ContainerShipmentV2
                 {
                     for (int x = Middle - 1; x < Width; x++)
                     {
-                        var stack = Stacks.Find(s => s.X == x && s.Y == y);
+                        var stack = Stacks.ToList().Find(s => s.X == x && s.Y == y);
                         if (Stacks.Any(s => s.X == x && s.Y != y && s.HeighestContainerZ < stack.HeighestContainerZ)) continue;
                         if (!stack.ContainerCanBeAdded(this, container)) continue;
                         WeightRightSide += container.Weight;
@@ -76,9 +90,8 @@ namespace ContainerShipmentV2
 
         public bool PlaceCooledContainer(Container container)
         {
-            //y = 0 want gekoelde containers moeten voor aan de boot.
+            // The Y-axes is set to a constant value = 0 since cooled containers are only allowed to placed in front of the ship
             // 30 in the foreach below is the possibility of the maximum amount of containers in one stack (30 containers of each 4 tons => 120 ton (maximum weight))
-
 
             const int y = 0;
 
@@ -160,6 +173,7 @@ namespace ContainerShipmentV2
             return false;
         }
 
+
         private bool PlaceRightSide(Container container, int y)
         {
             for (int x = Middle - 1; x < Width; x++)
@@ -167,7 +181,7 @@ namespace ContainerShipmentV2
                 var stack = _stacks.Find(s => s.X == x && s.Y == y);
                 if (!stack.ContainerCanBeAdded(this, container)) continue;
                 stack.AddContainer(container);
-                PlacedContainers.Add(container);
+                PlacedContainers.ToList().Add(container);
                 return true;
             }
 
@@ -180,7 +194,7 @@ namespace ContainerShipmentV2
             {
                 var stack = _stacks.Find(s => s.X == x && s.Y == y);
                 if (!stack.ContainerCanBeAdded(this, container)) continue;
-                PlacedContainers.Add(container);
+                PlacedContainers.ToList().Add(container);
                 stack.AddContainer(container);
                 return true;
             }
