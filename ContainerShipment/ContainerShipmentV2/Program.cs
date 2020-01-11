@@ -12,9 +12,10 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                //[ContainerType.Cooled] = 20,
+
                 [ContainerType.Normal] = 20,
-                [ContainerType.Valuable] = 10
+                [ContainerType.Valuable] = 500
+
             };
 
             Console.WriteLine("Hello World!");
