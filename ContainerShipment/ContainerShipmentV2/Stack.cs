@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,15 +21,13 @@ namespace ContainerShipmentV2
             Containers = new List<Container>();
         }
 
-        public bool WeightExceeded(int weight) => Containers.Where(c => Containers.IndexOf(c) != 0).Sum(c => c.Weight) + weight > 120;
-
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
             if (WeightExceeded(container.Weight) || IsTopContainerValuable()) return false;
-            if (container.ContainerType == ContainerType.Valuable && !ValuableIsAllowed(ship)) return false;
-
-            return true;
+            return container.ContainerType != ContainerType.Valuable || ValuableIsAllowed(ship);
         }
+
+        private bool WeightExceeded(int weight) => Containers.Where(c => Containers.IndexOf(c) != 0).Sum(c => c.Weight) + weight > 120;
 
         private bool ValuableIsAllowed(Ship ship)
         {
@@ -54,11 +53,9 @@ namespace ContainerShipmentV2
 
         public void AddContainer(Container container)
         {
-            //TODO: Hiernaar kijken want er hoeft eigenlijk alleen maar gekeken naar de onderste container. Dus misschien Alleen de onderste container c.AddWeightAbove(container.Weight) en daarna gewoon de container toevoegen aan stack.
-            foreach (var c in Containers)
-            {
-                c.AddWeightAbove(container.Weight);
-            }
+            container.Index = Indexer.I++;
+
+            Containers.ForEach(c => c.AddWeightAbove(container.Weight));
             Containers.Add(container);
         }
     }

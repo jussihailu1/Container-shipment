@@ -6,9 +6,10 @@ namespace ContainerShipmentV2
 {
     public class Container
     {
-        public int Weight { get; set; }
-        public int WeightAbove { get; set; }
+        public int Weight { get; }
+        public int WeightAbove { get; private set; }
         public ContainerType ContainerType { get; }
+        public int Index { get; set; }
 
         public Container(int weight, ContainerType containerType)
         {
@@ -19,7 +20,7 @@ namespace ContainerShipmentV2
 
         public void AddWeightAbove(int weight)
         {
-            this.WeightAbove += weight;
+            WeightAbove += weight;
         }
     }
 

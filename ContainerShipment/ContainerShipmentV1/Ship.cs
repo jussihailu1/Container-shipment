@@ -24,7 +24,6 @@ namespace ContainerShipmentV1
             
         //}
 
-        //TODO: Kijken of deze methode beter is dan de andere.
         public bool CheckWeight(Container containerToAdd, List<Container> containerStack)
         {
             containerStack.OrderByDescending(c => c.VectorPoint.Z);
