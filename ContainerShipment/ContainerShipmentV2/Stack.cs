@@ -13,6 +13,7 @@ namespace ContainerShipmentV2
         public int Y { get; set; }
         public List<Container> Containers { get; set; }
         public int HeighestContainerZ => Containers.Count - 1;
+        private const int MaxWeightAbove = 120;
 
         public Stack(int x, int y)
         {
@@ -24,10 +25,13 @@ namespace ContainerShipmentV2
         public bool ContainerCanBeAdded(Ship ship, Container container)
         {
             if (WeightExceeded(container.Weight) || IsTopContainerValuable()) return false;
+            if (container.ContainerType == ContainerType.Cooled && !CooledIsAllowed()) return false;
             return container.ContainerType != ContainerType.Valuable || ValuableIsAllowed(ship);
         }
 
-        private bool WeightExceeded(int weight) => Containers.Where(c => Containers.IndexOf(c) != 0).Sum(c => c.Weight) + weight > 120;
+        private bool CooledIsAllowed() => Y == 0;
+
+        private bool WeightExceeded(int weight) => Containers.Where(c => Containers.IndexOf(c) != 0).Sum(c => c.Weight) + weight > MaxWeightAbove;
 
         private bool ValuableIsAllowed(Ship ship)
         {
@@ -53,8 +57,6 @@ namespace ContainerShipmentV2
 
         public void AddContainer(Container container)
         {
-            container.Index = Indexer.I++;
-
             Containers.ForEach(c => c.AddWeightAbove(container.Weight));
             Containers.Add(container);
         }

@@ -9,7 +9,6 @@ namespace ContainerShipmentV2
         public int Weight { get; }
         public int WeightAbove { get; private set; }
         public ContainerType ContainerType { get; }
-        public int Index { get; set; }
 
         public Container(int weight, ContainerType containerType)
         {

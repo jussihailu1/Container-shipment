@@ -20,7 +20,7 @@ namespace ContainerShipmentV2
 
         public void CreateContainers(Dictionary<ContainerType, int> containersToCreate)
         {
-            var rnd = new Random(1);
+            var rnd = new Random();
 
             foreach (KeyValuePair<ContainerType, int> containerToCreate in containersToCreate)
             {
