@@ -11,7 +11,7 @@ namespace ContainerShipmentV2
     {
         private readonly List<Stack> _stacks;
         public IEnumerable<Stack> Stacks => _stacks.AsReadOnly();
-        public int MaxWeight => Width * Length * 31 * 4;             //TODO: Hoe bepalen we het maximale gewicht?
+        public int MaxWeight => Width * Length * 150; 
         private int Middle => decimal.ToInt32(decimal.Divide(Width, 2));
         public int Width { get; }
         public int Length { get; }
@@ -25,7 +25,7 @@ namespace ContainerShipmentV2
         {
             get
             {
-                var p = WeightLeftSide / CurrentTotalWeight * 100;
+                var p = WeightLeftSide / (decimal)CurrentTotalWeight * 100;
                 return p <= 60 && p >= 40;
             }
         }

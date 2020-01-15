@@ -12,14 +12,14 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 40,
-                [ContainerType.Normal] = 600,
+                [ContainerType.Cooled] = 50,
+                [ContainerType.Normal] = 150,
                 [ContainerType.Valuable] = 30
             };
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(5, 10);
+            var sm = new ShipManager(6, 8);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
