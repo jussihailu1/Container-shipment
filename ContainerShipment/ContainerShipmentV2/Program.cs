@@ -11,6 +11,7 @@ namespace ContainerShipmentV2
         static void Main(string[] args)
         {
             Console.WindowHeight = Console.LargestWindowHeight;
+
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
                 [ContainerType.Cooled] = 50,
@@ -20,7 +21,7 @@ namespace ContainerShipmentV2
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(6, 8);
+            var sm = new ShipManager(6, 10);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -77,7 +78,42 @@ namespace ContainerShipmentV2
                 shipString.AppendLine();
             }
 
+            var offset = 0;
+
+            //TODO: WRM WERKT DIT NIET?
+            //for (int i = 0; i < shipString.Length; i++)
+            //{
+            //    var c = shipString[i].ToString();
+            //    var left = i;
+            //    var top = Console.CursorTop - 1;
+            //    if (c == "\r")
+            //    {
+            //        c = string.Empty;
+            //        offset += 30;
+            //        left -= offset;
+            //        top++;
+            //    }
+
+            //    Console.SetCursorPosition(left, top);
+            //    Console.WriteLine(c);
+            //}
+
             Console.WriteLine(shipString);
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //var test = "TESTTESTTESTTESTTEST";
+            //Console.WriteLine("Please");
+            //Console.WriteLine("");
+            //int j = 0;
+            //foreach (var c in test)
+            //{
+            //    Console.BackgroundColor = j % 2 == 0 ? ConsoleColor.Red : ConsoleColor.Blue;
+            //    Console.SetCursorPosition(Console.CursorLeft + j++, Console.CursorTop - 1);
+            //    Console.WriteLine(c);
+            //}
 
             Console.Read();
         }
