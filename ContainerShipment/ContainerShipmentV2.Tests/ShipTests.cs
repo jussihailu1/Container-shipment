@@ -27,9 +27,38 @@ namespace ContainerShipmentV2.Tests
                 }
             }
 
-            var a = stacks.ForEach(s => ship.Stacks.Any(ss =>  == ss));
+            //var a = stacks.ForEach(s => ship.Stacks.Any(ss =>  == ss));
 
             Assert.AreEqual(expected, ship.Stacks.Count());
+        }
+
+        [TestMethod]
+        public void ShipConstructor_MaxWeight_Correctly_Calculated()
+        {
+            var width = 6;
+            var length = 10;
+            var expected = width * length * 150;
+
+            Ship ship = new Ship(width, length);
+
+            Assert.AreEqual(expected, ship.MaxWeight);
+        }
+
+        [TestMethod]
+        public void Ship_CurrentWeight_Correctly_Calculated()
+        {
+            ShipManager sm = new ShipManager(4, 5);
+
+            for (int i = 0; i < 5; i++)
+            {
+                sm.ContainersToPlace.Add(new Container(15, ContainerType.Normal));
+            }
+
+            sm.PlaceContainers();
+
+            var expected = 15 * 5;
+
+            Assert.AreEqual(expected, sm.Ship.CurrentTotalWeight);
         }
 
         private bool FindPlaceForContainerTest(int CCAmount, int NCAmount, int VCAmount, Container container, int shipW, int shipL)
