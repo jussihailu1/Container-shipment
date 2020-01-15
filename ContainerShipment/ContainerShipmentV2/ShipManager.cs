@@ -20,11 +20,13 @@ namespace ContainerShipmentV2
 
         public void CreateContainers(Dictionary<ContainerType, int> containersToCreate)
         {
+            var rnd = new Random(1);
+
             foreach (KeyValuePair<ContainerType, int> containerToCreate in containersToCreate)
             {
                 for (int i = 0; i < containerToCreate.Value; i++)
                 {
-                    var weight = new Random().Next(4, 31);
+                    var weight = rnd.Next(4, 31);
 
                     switch (containerToCreate.Key)
                     {

@@ -19,7 +19,7 @@ namespace ContainerShipmentV2
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(6, 8);
+            var sm = new ShipManager(5, 10);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -58,11 +58,11 @@ namespace ContainerShipmentV2
 
                         var stringToAdd = container == null
                             ? " "
-                        //: $"{container.WeightAbove}";
-                        : $"{container.ContainerType.ToString().Substring(0, 1)}";
+                        : $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
+                        //: $"{container.ContainerType.ToString().Substring(0, 1)}";
                         //: $"{container.Weight}";
                         //: $"{container.Indexer}";
-                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.Indexer}";
+                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
 
                         for (int i = 0; i < 3 - stringToAdd.Length; i++)
                         {
