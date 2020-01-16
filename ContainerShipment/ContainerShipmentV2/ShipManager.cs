@@ -20,8 +20,10 @@ namespace ContainerShipmentV2
 
         public void CreateContainers(Dictionary<ContainerType, int> containersToCreate)
         {
-            var rnd = new Random();
-
+            int seed = new Random().Next();
+            Console.WriteLine("Seed: " + seed);
+            var rnd = new Random(seed);
+            Console.WriteLine();
             foreach (KeyValuePair<ContainerType, int> containerToCreate in containersToCreate)
             {
                 for (int i = 0; i < containerToCreate.Value; i++)

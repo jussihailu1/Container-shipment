@@ -18,18 +18,28 @@ namespace ContainerShipmentV2.Tests
             var ship = new Ship(width, length);
             var expected = width * length;
 
-            var stacks = new List<Stack>();
+            var expectedStacks = new List<Stack>();
             for (int y = 0; y < length; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    stacks.Add(new Stack(x, y));
+                    expectedStacks.Add(new Stack(x, y));
                 }
             }
 
-            var a = stacks.ForEach(s => ship.Stacks.Any(ss =>  == ss));
+            var result = true;
+
+            foreach (var expectedStack in expectedStacks)
+            {
+                if (ship.Stacks.Count(stack => stack.X == expectedStack.X && stack.Y == expectedStack.Y) == 1) continue;
+                result = false;
+                goto END;
+            }
+
+            END:
 
             Assert.AreEqual(expected, ship.Stacks.Count());
+            Assert.IsTrue(result);
         }
 
         private bool FindPlaceForContainerTest(int CCAmount, int NCAmount, int VCAmount, Container container, int shipW, int shipL)

@@ -58,16 +58,11 @@ namespace ContainerShipmentV2
 
                         var stringToAdd = container == null
                             ? " "
-                        : $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
-                        //: $"{container.ContainerType.ToString().Substring(0, 1)}";
+                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
+                        : $"{container.ContainerType.ToString().Substring(0, 1)}";
                         //: $"{container.Weight}";
                         //: $"{container.Indexer}";
                         //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
-
-                        for (int i = 0; i < 3 - stringToAdd.Length; i++)
-                        {
-                            stringToAdd += " ";
-                        }
 
                         shipString.Append($"[{stringToAdd}]");
                     }
