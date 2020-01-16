@@ -12,14 +12,17 @@ namespace ContainerShipmentV2
         {
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 50,
-                [ContainerType.Normal] = 150,
+                [ContainerType.Cooled] = 15,
+                [ContainerType.Normal] = 500,
                 [ContainerType.Valuable] = 30
             };
 
             Console.WriteLine("Hello World!");
 
-            var sm = new ShipManager(5, 10);
+            var c = 4 / 2 % 2 != 0;
+            Console.WriteLine(c);
+
+            var sm = new ShipManager(10, 10);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -34,7 +37,7 @@ namespace ContainerShipmentV2
             Console.WriteLine(" ");
             Console.WriteLine($"Weight: Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide} | Difference = {ship.WeightLeftSide - ship.WeightRightSide}");
             Console.WriteLine($"Max: {ship.MaxWeight} Current: {ship.CurrentTotalWeight}");
-            var halfOfMaxWeightReached = ship.HalfOfMaxWeightReached && ship.IsShipInBalance ? "YES" : "NO";
+            var halfOfMaxWeightReached = ship.IsShipInBalance() && ship.HalfOfMaxWeightReached ? "YES" : "NO";
             Console.WriteLine(" ");
             Console.WriteLine("Can ship leave dock: " + halfOfMaxWeightReached);
             Console.WriteLine(" ");
@@ -58,9 +61,9 @@ namespace ContainerShipmentV2
 
                         var stringToAdd = container == null
                             ? " "
-                        : $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
+                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
                         //: $"{container.ContainerType.ToString().Substring(0, 1)}";
-                        //: $"{container.Weight}";
+                        : $"{container.Weight}";
                         //: $"{container.Indexer}";
                         //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
 
