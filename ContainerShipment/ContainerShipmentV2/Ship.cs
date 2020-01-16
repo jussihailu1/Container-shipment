@@ -11,7 +11,7 @@ namespace ContainerShipmentV2
     {
         private readonly List<Stack> _stacks;
         public IEnumerable<Stack> Stacks => _stacks.AsReadOnly();
-        public int MaxWeight => Width * Length * 150; 
+        public int MaxWeight => Width * Length * 150;
         private int Middle => decimal.ToInt32(decimal.Divide(Width, 2));
         public int Width { get; }
         public int Length { get; }
@@ -29,6 +29,12 @@ namespace ContainerShipmentV2
                 ? (WeightLeftSide - WeightRightSide) * -1
                 : WeightLeftSide - WeightRightSide;
             return difference <= capsizeLimit;
+            var currentTotalWeight = Uneven == 1 ? WeightLeftSide + WeightRightSide : CurrentTotalWeight;
+            var left = WeightLeftSide / (decimal)currentTotalWeight * 100;
+            var right = WeightRightSide / (decimal)currentTotalWeight * 100;
+
+            return left - right < 20 && right - left < 20;
+            
         }
 
         public Ship(int width, int length)
@@ -46,9 +52,16 @@ namespace ContainerShipmentV2
             }
         }
 
-        private int CalcWeightLeftSide() => Stacks.Where(s => s.X < Middle).SelectMany(s => s.Containers).Sum(c => c.Weight);
+        private int CalcWeightLeftSide()
+        {
+            var a = Stacks.Where(s => s.X < Middle).ToList();
+            return Stacks.Where(s => s.X < Middle).SelectMany(s => s.Containers).Sum(c => c.Weight);
+        }
 
-        private int CalcWeightRightSide() => Stacks.Where(s => s.X > Middle - Uneven).SelectMany(s => s.Containers).Sum(c => c.Weight);
+        private int CalcWeightRightSide()
+        {
+            return Stacks.Where(s => s.X > Middle - Uneven).SelectMany(s => s.Containers).Sum(c => c.Weight);
+        }
 
         public bool FindPlaceForContainer(Container container)
         {
