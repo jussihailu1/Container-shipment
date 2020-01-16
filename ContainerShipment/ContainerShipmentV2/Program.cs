@@ -36,7 +36,7 @@ namespace ContainerShipmentV2
             Console.WriteLine(" ");
             Console.WriteLine($"Weight: Left = {ship.WeightLeftSide} | Right = {ship.WeightRightSide} | Difference = {ship.WeightLeftSide - ship.WeightRightSide}");
             Console.WriteLine($"Max: {ship.MaxWeight} Current: {ship.CurrentTotalWeight}");
-            var halfOfMaxWeightReached = ship.HalfOfMaxWeightReached && ship.IsShipInBalance ? "YES" : "NO";
+            var halfOfMaxWeightReached = ship.IsShipInBalance() && ship.HalfOfMaxWeightReached ? "YES" : "NO";
             Console.WriteLine(" ");
             Console.WriteLine("Can ship leave dock: " + halfOfMaxWeightReached);
             Console.WriteLine(" ");
@@ -69,7 +69,7 @@ namespace ContainerShipmentV2
                             //stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
                         }
 
-                        shipString.Append($"[{stringToAdd:d2}]");
+                        shipString.Append($"[{stringToAdd}]");
                     }
 
                     shipString.AppendLine();

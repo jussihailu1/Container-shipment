@@ -21,13 +21,14 @@ namespace ContainerShipmentV2
         public IEnumerable<Container> PlacedContainers => Stacks.SelectMany(s => s.Containers);
         public int CurrentTotalWeight => PlacedContainers.Sum(c => c.Weight);
         public bool HalfOfMaxWeightReached => CurrentTotalWeight > MaxWeight / 2;
-        public bool IsShipInBalance
+        public bool IsShipInBalance()
         {
-            get
-            {
-                var p = WeightLeftSide / (decimal)CurrentTotalWeight * 100;
-                return p <= 60 && p >= 40;
-            }
+
+            var capsizeLimit = 0.2 * CurrentTotalWeight;
+            var difference = WeightLeftSide - WeightRightSide < 0
+                ? (WeightLeftSide - WeightRightSide) * -1
+                : WeightLeftSide - WeightRightSide;
+            return difference <= capsizeLimit;
         }
 
         public Ship(int width, int length)
