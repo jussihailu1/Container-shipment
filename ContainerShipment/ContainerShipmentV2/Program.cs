@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace ContainerShipmentV2
 {
@@ -14,9 +16,10 @@ namespace ContainerShipmentV2
 
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 5,
-                [ContainerType.Normal] = 5,
-                [ContainerType.Valuable] = 5
+                [ContainerType.Cooled] = 50,
+                [ContainerType.Normal] = 150,
+                [ContainerType.Valuable] = 40
+
             };
 
             Console.WriteLine("Hello World!");
@@ -79,6 +82,50 @@ namespace ContainerShipmentV2
             }
 
             Console.WriteLine(shipString);
+
+            Console.WriteLine(" ");
+            Console.WriteLine(" ");
+            Console.WriteLine(" ");
+            Console.WriteLine(" ");
+
+            string total = "";
+
+            for (int i = 0; i < ship.Width; i++)
+            {
+                var row = ship.Stacks.Where(s => s.X == i).ToList();
+                foreach (var stack in row)
+                {
+                    foreach (var container in stack.Containers)
+                    {
+                        switch (container.ContainerType)
+                        {
+                            case ContainerType.Cooled: total += "3"; break;
+                            case ContainerType.Normal: total += "1"; break;
+                            case ContainerType.Valuable: total += "2"; break;
+                        }
+
+                        if (container != stack.Containers.Last())
+                        {
+                            total += "-";
+                        }
+                    }
+
+                    if (stack != row.Last())
+                    {
+                        total += ",";
+                    }
+                }
+
+                if (i != ship.Width - 1)
+                {
+                    total += "/";
+                }
+            }
+
+            string unityLink = $"https://i872272core.venus.fhict.nl/ContainerVisualizer/index.html?length={ship.Length}&width={ship.Width}&stacks={total}";
+            var unityUri = new Uri(unityLink);
+            IWebDriver driver = new ChromeDriver();
+            driver.Navigate().GoToUrl(unityUri);
 
             Console.Read();
         }
