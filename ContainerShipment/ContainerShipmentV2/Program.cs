@@ -10,6 +10,8 @@ namespace ContainerShipmentV2
     {
         static void Main(string[] args)
         {
+            Console.WindowHeight = Console.LargestWindowHeight;
+
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
                 [ContainerType.Cooled] = 50,
@@ -56,15 +58,18 @@ namespace ContainerShipmentV2
                             container = stack.Containers[z];
                         }
 
-                        var stringToAdd = container == null
-                            ? " "
-                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
-                        : $"{container.ContainerType.ToString().Substring(0, 1)}";
-                        //: $"{container.Weight}";
-                        //: $"{container.Indexer}";
-                        //: $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
+                        var stringToAdd = " ";
 
-                        shipString.Append($"[{stringToAdd}]");
+                        if (container != null)
+                        {
+                            //stringToAdd = $"{container.WeightAbove}";
+                            stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}";
+                            //stringToAdd = $"{container.Weight}";
+                            //stringToAdd = $"{container.Index}";
+                            //stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
+                        }
+
+                        shipString.Append($"[{stringToAdd:d2}]");
                     }
 
                     shipString.AppendLine();
