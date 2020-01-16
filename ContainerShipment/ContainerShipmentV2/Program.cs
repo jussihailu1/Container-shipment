@@ -14,17 +14,14 @@ namespace ContainerShipmentV2
 
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 15,
-                [ContainerType.Normal] = 500,
-                [ContainerType.Valuable] = 30
+                [ContainerType.Cooled] = 5,
+                [ContainerType.Normal] = 5,
+                [ContainerType.Valuable] = 5
             };
 
             Console.WriteLine("Hello World!");
 
-            var c = 4 / 2 % 2 != 0;
-            Console.WriteLine(c);
-
-            var sm = new ShipManager(10, 10);
+            var sm = new ShipManager(5, 10);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -68,8 +65,7 @@ namespace ContainerShipmentV2
                         {
                             //stringToAdd = $"{container.WeightAbove}";
                             stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}";
-                            //stringToAdd = $"{container.Weight}";
-                            //stringToAdd = $"{container.Index}";
+                            //stringToAdd = $"{container.Weight.ToString().PadRight(2)}";
                             //stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
                         }
 

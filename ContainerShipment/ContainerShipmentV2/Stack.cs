@@ -9,9 +9,9 @@ namespace ContainerShipmentV2
 {
     public class Stack
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public List<Container> Containers { get; set; }
+        public int X { get; }
+        public int Y { get; }
+        public List<Container> Containers { get; }
         public int HeighestContainerZ => Containers.Count - 1;
         private const int MaxWeightAbove = 120;
 

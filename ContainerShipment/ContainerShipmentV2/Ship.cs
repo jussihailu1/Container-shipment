@@ -17,25 +17,10 @@ namespace ContainerShipmentV2
         public int Length { get; }
         public int WeightLeftSide => CalcWeightLeftSide();
         public int WeightRightSide => CalcWeightRightSide();
-        private int Uneven => Convert.ToInt32(Width / 2 % 2 != 0);
+        private bool Even =>  Width % 2 == 0;
         public IEnumerable<Container> PlacedContainers => Stacks.SelectMany(s => s.Containers);
         public int CurrentTotalWeight => PlacedContainers.Sum(c => c.Weight);
         public bool HalfOfMaxWeightReached => CurrentTotalWeight > MaxWeight / 2;
-        public bool IsShipInBalance()
-        {
-
-            var capsizeLimit = 0.2 * CurrentTotalWeight;
-            var difference = WeightLeftSide - WeightRightSide < 0
-                ? (WeightLeftSide - WeightRightSide) * -1
-                : WeightLeftSide - WeightRightSide;
-            return difference <= capsizeLimit;
-            var currentTotalWeight = Uneven == 1 ? WeightLeftSide + WeightRightSide : CurrentTotalWeight;
-            var left = WeightLeftSide / (decimal)currentTotalWeight * 100;
-            var right = WeightRightSide / (decimal)currentTotalWeight * 100;
-
-            return left - right < 20 && right - left < 20;
-            
-        }
 
         public Ship(int width, int length)
         {
@@ -52,16 +37,19 @@ namespace ContainerShipmentV2
             }
         }
 
-        private int CalcWeightLeftSide()
+        public bool IsShipInBalance()
         {
-            var a = Stacks.Where(s => s.X < Middle).ToList();
-            return Stacks.Where(s => s.X < Middle).SelectMany(s => s.Containers).Sum(c => c.Weight);
+            var currentTotalWeight = !Even ? WeightLeftSide + WeightRightSide : CurrentTotalWeight;
+            var capsizeLimit = 0.2 * currentTotalWeight;
+            var difference = WeightLeftSide - WeightRightSide < 0
+                ? (WeightLeftSide - WeightRightSide) * -1
+                : WeightLeftSide - WeightRightSide;
+            return difference <= capsizeLimit;
         }
 
-        private int CalcWeightRightSide()
-        {
-            return Stacks.Where(s => s.X > Middle - Uneven).SelectMany(s => s.Containers).Sum(c => c.Weight);
-        }
+        private int CalcWeightLeftSide() => _stacks.Where(s => s.X < Middle).SelectMany(s => s.Containers).Sum(c => c.Weight);
+
+        private int CalcWeightRightSide() => _stacks.Where(s => s.X > Middle - Convert.ToInt32(Even)).SelectMany(s => s.Containers).Sum(c => c.Weight);
 
         public bool FindPlaceForContainer(Container container)
         {
@@ -116,8 +104,8 @@ namespace ContainerShipmentV2
 
         private bool OtherPlacesAvailable(Stack stack, bool containerIsNormal, int x, int y)
         {
-            if (Stacks.Any(s => s.X != x && s.Y == y && s.HeighestContainerZ < stack.HeighestContainerZ)) return true;
-            if (containerIsNormal && Stacks.Any(s => s.X == x && s.Y > y && s.HeighestContainerZ < stack.HeighestContainerZ)) return true;
+            if (_stacks.Any(s => s.X != x && s.Y == y && s.HeighestContainerZ < stack.HeighestContainerZ)) return true;
+            if (containerIsNormal && _stacks.Any(s => s.X == x && s.Y > y && s.HeighestContainerZ < stack.HeighestContainerZ)) return true;
             return false;
         }
 

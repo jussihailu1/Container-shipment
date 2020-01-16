@@ -7,9 +7,9 @@ namespace ContainerShipmentV2
 {
     public class ShipManager
     {
-        public Ship Ship { get; set; }
-        public List<Container> ContainersToPlace { get; set; }
-        public List<Container> NotPlacedContainers { get; set; }
+        public Ship Ship { get; }
+        public List<Container> ContainersToPlace { get; private set; }
+        public List<Container> NotPlacedContainers { get; }
 
         public ShipManager(int width, int length)
         {
@@ -48,16 +48,11 @@ namespace ContainerShipmentV2
 
         public void PlaceContainers()
         {
-            ContainersToPlace = ContainersToPlace.OrderByDescending(container => container.Weight).ToList();
-
-            var cooledContainers = ContainersToPlace.Where(container => container.ContainerType == ContainerType.Cooled).ToList();
-            var normalContainers = ContainersToPlace.Where(container => container.ContainerType == ContainerType.Normal).ToList();
-            var valuableContainers = ContainersToPlace.Where(container => container.ContainerType == ContainerType.Valuable).ToList();
-
-            ContainersToPlace.Clear();
-            ContainersToPlace.AddRange(cooledContainers);
-            ContainersToPlace.AddRange(normalContainers);
-            ContainersToPlace.AddRange(valuableContainers);
+            ContainersToPlace = ContainersToPlace.OrderBy(c => c.ContainerType == ContainerType.Valuable)
+                .ThenBy(c => c.ContainerType == ContainerType.Normal)
+                .ThenBy(c => c.ContainerType == ContainerType.Cooled)
+                .ThenByDescending(container => container.Weight)
+                .ToList();
 
             foreach (var container in ContainersToPlace)
             {
