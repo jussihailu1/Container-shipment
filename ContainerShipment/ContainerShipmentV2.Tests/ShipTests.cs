@@ -43,6 +43,24 @@ namespace ContainerShipmentV2.Tests
         }
 
         [TestMethod]
+        public void Ship_PlacedContainersTest()
+        {
+            var containersToCreate = new Dictionary<ContainerType, int>()
+            {
+                [ContainerType.Cooled] = 50,
+                [ContainerType.Normal] = 200,
+                [ContainerType.Valuable] = 30
+            };
+
+            var sm = new ShipManager(6,11);
+            sm.CreateContainers(containersToCreate);
+            sm.PlaceContainers();
+
+            var expectedContainers = sm.Ship.Stacks.SelectMany(s => s.Containers).ToList();
+            CollectionAssert.AreEquivalent(expectedContainers, sm.Ship.PlacedContainers.ToList());
+        }
+
+        [TestMethod]
         public void Ship_Is_In_Balance_ExpectTrue()
         {
             var sm = new ShipManager(2, 2);

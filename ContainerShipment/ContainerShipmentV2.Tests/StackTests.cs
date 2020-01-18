@@ -89,19 +89,7 @@ namespace ContainerShipmentV2.Tests
             var sm = new ShipManager(5, 8);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
-            var result = false;
-
-            foreach (var stack in sm.Ship.Stacks)
-            {
-                foreach (var container in stack.Containers)
-                {
-                    if (container.WeightAbove <= 120) continue;
-                    result = true;
-                    goto END;
-                }
-            }
-
-            END:
+            var result = sm.Ship.PlacedContainers.Any(container => container.WeightAbove > 120);
 
             Assert.IsFalse(result);
         }
