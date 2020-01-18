@@ -16,15 +16,15 @@ namespace ContainerShipmentV2
 
             var containersToCreate = new Dictionary<ContainerType, int>()
             {
-                [ContainerType.Cooled] = 50,
-                [ContainerType.Normal] = 150,
-                [ContainerType.Valuable] = 40
+                [ContainerType.Cooled] = 500,
+                [ContainerType.Normal] = 500,
+                [ContainerType.Valuable] = 100
 
             };
+            var rnd = new Random();
 
-            Console.WriteLine("Hello World!");
-
-            var sm = new ShipManager(5, 10);
+            int width = rnd.Next(3, 10);
+            var sm = new ShipManager(width, width * 5);
             sm.CreateContainers(containersToCreate);
             sm.PlaceContainers();
 
@@ -67,12 +67,12 @@ namespace ContainerShipmentV2
                         if (container != null)
                         {
                             //stringToAdd = $"{container.WeightAbove}";
-                            stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}";
+                            //stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}";
                             //stringToAdd = $"{container.Weight.ToString().PadRight(2)}";
-                            //stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}{container.Index}";
+                            stringToAdd = $"{container.ContainerType.ToString().Substring(0, 1)}{container.WeightAbove}";
                         }
 
-                        shipString.Append($"[{stringToAdd}]");
+                        shipString.Append($"[{stringToAdd.ToString().PadRight(3)}]");
                     }
 
                     shipString.AppendLine();
