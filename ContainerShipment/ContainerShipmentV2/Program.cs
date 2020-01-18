@@ -10,7 +10,7 @@ namespace ContainerShipmentV2
     {
         static void Main(string[] args)
         {
-            //test
+            
             Console.WindowHeight = Console.LargestWindowHeight;
 
             var containersToCreate = new Dictionary<ContainerType, int>()
